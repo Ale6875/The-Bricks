@@ -10,10 +10,13 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   min-height: 100vh;
   margin: 0;
+  background-image: url("../assets/background.png");
+  background-size: cover;
+  background-position: center;
 }
 
 canvas {
-  background: #f0f0f0;
+  background: #f0f0f0b8;
   display: block;
   border-radius: 5px;
 }
@@ -39,33 +42,6 @@ canvas {
   transform: scale(0.95);
 }
 
-.rules-btn {
-  position: absolute;
-  top: 80px;
-  left: 30px;
-}
-
-.rules {
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: #ff6f00;
-  color: #fff;
-  min-height: 100vh;
-  width: 300px;
-  padding: 20px;
-  padding-top: 100px;
-  font-size: 18px;
-  line-height: 1.8;
-  transform: translateX(-320px);
-  transition: transform 1.5s ease-in-out;
-  z-index: 100;
-}
-
-.rules.show {
-  transform: translateX(0);
-}
-
 .play-btn {
   position: absolute;
   top: 80px;
@@ -79,7 +55,6 @@ canvas {
   bottom: 0;
   right: 0;
   left: 0;
-  /* display: flex; */
   display: none;
   align-items: center;
   justify-content: center;
