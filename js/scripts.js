@@ -1,4 +1,3 @@
-// Get DOM Elements
 window.onload = function () {
   paused = false;
   playBtn.disabled = false;
@@ -18,11 +17,9 @@ let score = 0;
 let highScore = localStorage.getItem("score");
 let paused = false;
 
-// Bricks
 const brickRowCount = 5;
 const brickColumnCount = 9;
 
-// Create Ball props
 const ball = {
   x: canvas.width / 2,
   y: canvas.height / 2,
@@ -32,7 +29,6 @@ const ball = {
   dy: -4,
 };
 
-// Create Paddle props
 const paddle = {
   x: canvas.width / 2 - 40,
   y: canvas.height - 20,
@@ -42,7 +38,6 @@ const paddle = {
   dx: 0,
 };
 
-// Create Brick Props
 const brickInfo = {
   w: 70,
   h: 20,
@@ -52,7 +47,6 @@ const brickInfo = {
   visible: true,
 };
 
-// Create Bricks
 const bricks = [];
 for (let i = 0; i < brickColumnCount; i++) {
   bricks[i] = [];
@@ -65,7 +59,6 @@ for (let i = 0; i < brickColumnCount; i++) {
 
 console.log(bricks);
 
-// Draw Ball on canvas
 function drawBall() {
   ctx.beginPath();
   ctx.arc(ball.x, ball.y, ball.size, 0, Math.PI * 2);
@@ -74,7 +67,6 @@ function drawBall() {
   ctx.closePath();
 }
 
-// Draw Paddle on Canvas
 function drawPaddle() {
   ctx.beginPath();
   ctx.rect(paddle.x, paddle.y, paddle.w, paddle.h);
@@ -83,13 +75,11 @@ function drawPaddle() {
   ctx.closePath();
 }
 
-// Draw Score on canvas
 function drawScore() {
   ctx.font = "20px Arial";
   ctx.fillText(`Score: ${score}`, canvas.width - 100, 30);
 }
 
-// Draw High Score
 function drawHighScore() {
   ctx.font = "20px Arial";
   ctx.fillText(
@@ -99,7 +89,6 @@ function drawHighScore() {
   );
 }
 
-// Draw Bricks on canvas
 function drawBricks() {
   bricks.forEach((column) => {
     column.forEach((brick) => {
@@ -112,9 +101,7 @@ function drawBricks() {
   });
 }
 
-// Draw Everything Together
 function draw() {
-  // Clear Canvas First
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBall();
   drawPaddle();
@@ -123,11 +110,9 @@ function draw() {
   drawBricks();
 }
 
-// Move Paddle on Canvas
 function movePaddle() {
   paddle.x += paddle.dx;
 
-  // Wall Detection
   if (paddle.x + paddle.w > canvas.width) {
     paddle.x = canvas.width - paddle.w;
   }
@@ -137,22 +122,18 @@ function movePaddle() {
   }
 }
 
-// Move Ball on Canvas
 function moveBall() {
   ball.x += ball.dx;
   ball.y += ball.dy;
 
-  // Wall collision(X Axis-Right/Left Walls)
   if (ball.x + ball.size > canvas.width || ball.x - ball.size < 0) {
-    ball.dx *= -1; //Reverse the direction of ball movement
+    ball.dx *= -1;
   }
 
-  // Wall Collision(Y Axis - Top/Bottom Walls)
   if (ball.y + ball.size > canvas.height || ball.y - ball.size < 0) {
-    ball.dy *= -1; //Reverse the direction of the ball movement
+    ball.dy *= -1;
   }
 
-  // Paddle Collision
   if (
     ball.x - ball.size > paddle.x &&
     ball.x + ball.size < paddle.x + paddle.w &&
@@ -161,27 +142,24 @@ function moveBall() {
     ball.dy = -ball.speed;
   }
 
-  // Brick Collision
   bricks.forEach((column) => {
     column.forEach((brick) => {
       if (brick.visible) {
         if (
-          ball.x - ball.size > brick.x && //left brick side checking
-          ball.x + ball.size < brick.x + brick.w && // right brick side checking
-          ball.y + ball.size > brick.y && //top brick side checking
-          ball.y - ball.size < brick.y + brick.h //bottom brick side checking
+          ball.x - ball.size > brick.x &&
+          ball.x + ball.size < brick.x + brick.w &&
+          ball.y + ball.size > brick.y &&
+          ball.y - ball.size < brick.y + brick.h
         ) {
-          ball.dy *= -1; //Reverse the direction of ball so collide to brick
-          brick.visible = false; //Make Bricks disappear
+          ball.dy *= -1;
+          brick.visible = false;
 
-          // Increase the score for each brick Collision
           increaseScore();
         }
       }
     });
   });
 
-  // Hit Bottom Wall - Lose
   if (ball.y + ball.size > canvas.height) {
     if (localStorage.getItem("score") < score) {
       localStorage.setItem("score", score);
@@ -189,14 +167,13 @@ function moveBall() {
     finalMessage.innerText = "Game Over";
     popup.style.display = "flex";
     paused = true;
-    highscore = localStorage.getItem("score");
+    highScore = localStorage.getItem("score");
     showAllBricks();
     score = 0;
     ball.speed = 0;
   }
 }
 
-// Increase Score
 function increaseScore() {
   score++;
 
@@ -208,19 +185,16 @@ function increaseScore() {
   }
 }
 
-// Make All Bricks Appear
 function showAllBricks() {
   bricks.forEach((column) => {
     column.forEach((brick) => (brick.visible = true));
   });
 }
 
-// Update Canvas and redraw canvas for every animation
 function update() {
   movePaddle();
   moveBall();
 
-  // Draw Everything
   draw();
 
   if (paused === false) {
@@ -229,14 +203,12 @@ function update() {
 }
 
 draw();
-// Start the game on clicking play
 function playGame() {
   paused = false;
   update();
   playBtn.disabled = true;
 }
 
-// KeyDown event
 function keyDown(e) {
   console.log(e.key);
   if (e.key === "Right" || e.key === "ArrowRight") {
@@ -246,7 +218,6 @@ function keyDown(e) {
   }
 }
 
-// Keyup event
 function keyUp(e) {
   if (
     e.key === "Right" ||
@@ -258,16 +229,11 @@ function keyUp(e) {
   }
 }
 
-// Start Game on clicking play
 playBtn.addEventListener("click", playGame);
 
-// Keyboard Event handlers
 document.addEventListener("keydown", keyDown);
 document.addEventListener("keyup", keyUp);
 
-
-
-// Restart game and play again
 playAgainBtn.addEventListener("click", (e) => {
   popup.style.display = "none";
   window.location.reload();
