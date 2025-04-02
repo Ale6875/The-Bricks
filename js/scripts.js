@@ -45,7 +45,15 @@ const brickInfo = {
   offsetX: 45,
   offsetY: 60,
   visible: true,
+  image: new Image(),
 };
+
+brickInfo.image.onload = function () {
+  initializeBricks();
+  draw();
+};
+
+brickInfo.image.src = "assets/brick.png";
 
 const bricks = [];
 for (let i = 0; i < brickColumnCount; i++) {
@@ -57,12 +65,10 @@ for (let i = 0; i < brickColumnCount; i++) {
   }
 }
 
-console.log(bricks);
-
 function drawBall() {
   ctx.beginPath();
   ctx.arc(ball.x, ball.y, ball.size, 0, Math.PI * 2);
-  ctx.fillStyle = "#e65100";
+  ctx.fillStyle = "#fea147";
   ctx.fill();
   ctx.closePath();
 }
@@ -70,7 +76,7 @@ function drawBall() {
 function drawPaddle() {
   ctx.beginPath();
   ctx.rect(paddle.x, paddle.y, paddle.w, paddle.h);
-  ctx.fillStyle = "#512da8";
+  ctx.fillStyle = "#46a240";
   ctx.fill();
   ctx.closePath();
 }
@@ -92,11 +98,9 @@ function drawHighScore() {
 function drawBricks() {
   bricks.forEach((column) => {
     column.forEach((brick) => {
-      ctx.beginPath();
-      ctx.rect(brick.x, brick.y, brick.w, brick.h);
-      ctx.fillStyle = brick.visible ? "#BC4A3C" : "transparent";
-      ctx.fill();
-      ctx.closePath();
+      if (brick.visible) {
+        ctx.drawImage(brick.image, brick.x, brick.y, brick.w, brick.h);
+      }
     });
   });
 }
