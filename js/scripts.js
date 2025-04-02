@@ -85,12 +85,12 @@ function drawPaddle() {
 }
 
 function drawScore() {
-  ctx.font = "17px SuperMario";
+  ctx.font = "15px SuperMario";
   ctx.fillText(`Score: ${score}`, canvas.width - 100, 30);
 }
 
 function drawHighScore() {
-  ctx.font = "17px SuperMario";
+  ctx.font = "15px SuperMario";
   ctx.fillText(
       `High Score: ${localStorage.getItem("score")}`,
       canvas.width - 260,
