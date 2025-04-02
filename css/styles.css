@@ -30,3 +30,8 @@ canvas {
 #final-message {
   color: #fff;
 }
+
+@font-face {
+  font-family: SuperMario;
+  src: url("../fonts/SuperMario256.ttf");
+}
