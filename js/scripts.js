@@ -1,5 +1,5 @@
 window.onload = function () {
-  paused = false;
+  paused = true;
   playBtn.disabled = false;
 };
 
@@ -15,7 +15,7 @@ const ctx = canvas.getContext("2d");
 
 let score = 0;
 let highScore = localStorage.getItem("score");
-let paused = false;
+let paused = true;
 
 const brickRowCount = 5;
 const brickColumnCount = 9;
@@ -56,12 +56,15 @@ brickInfo.image.onload = function () {
 brickInfo.image.src = "assets/brick.png";
 
 const bricks = [];
-for (let i = 0; i < brickColumnCount; i++) {
-  bricks[i] = [];
-  for (let j = 0; j < brickRowCount; j++) {
-    const x = i * (brickInfo.w + brickInfo.padding) + brickInfo.offsetX;
-    const y = j * (brickInfo.h + brickInfo.padding) + brickInfo.offsetY;
-    bricks[i][j] = { x, y, ...brickInfo };
+
+function initializeBricks() {
+  for (let i = 0; i < brickColumnCount; i++) {
+      bricks[i] = [];
+      for (let j = 0; j < brickRowCount; j++) {
+          const x = i * (brickInfo.w + brickInfo.padding) + brickInfo.offsetX;
+          const y = j * (brickInfo.h + brickInfo.padding) + brickInfo.offsetY;
+          bricks[i][j] = { x, y, ...brickInfo };
+      }
   }
 }
 
@@ -89,19 +92,19 @@ function drawScore() {
 function drawHighScore() {
   ctx.font = "20px Arial";
   ctx.fillText(
-    `High Score: ${localStorage.getItem("score")}`,
-    canvas.width - 260,
-    30
+      `High Score: ${localStorage.getItem("score")}`,
+      canvas.width - 260,
+      30
   );
 }
 
 function drawBricks() {
   bricks.forEach((column) => {
-    column.forEach((brick) => {
-      if (brick.visible) {
-        ctx.drawImage(brick.image, brick.x, brick.y, brick.w, brick.h);
-      }
-    });
+      column.forEach((brick) => {
+          if (brick.visible) {
+              ctx.drawImage(brick.image, brick.x, brick.y, brick.w, brick.h);
+          }
+      });
   });
 }
 
@@ -118,12 +121,26 @@ function movePaddle() {
   paddle.x += paddle.dx;
 
   if (paddle.x + paddle.w > canvas.width) {
-    paddle.x = canvas.width - paddle.w;
+      paddle.x = canvas.width - paddle.w;
   }
 
   if (paddle.x < 0) {
-    paddle.x = 0;
+      paddle.x = 0;
   }
+}
+
+function resetGame() {
+  score = 0;
+  ball.x = canvas.width / 2;
+  ball.y = canvas.height / 2;
+  ball.speed = 4;
+  ball.dx = 4;
+  ball.dy = -4;
+  paddle.x = canvas.width / 2 - 40;
+  showAllBricks();
+  draw();
+  paused = true;
+  playBtn.disabled = false;
 }
 
 function moveBall() {
@@ -131,82 +148,83 @@ function moveBall() {
   ball.y += ball.dy;
 
   if (ball.x + ball.size > canvas.width || ball.x - ball.size < 0) {
-    ball.dx *= -1;
+      ball.dx *= -1;
   }
 
   if (ball.y + ball.size > canvas.height || ball.y - ball.size < 0) {
-    ball.dy *= -1;
+      ball.dy *= -1;
   }
 
   if (
-    ball.x - ball.size > paddle.x &&
-    ball.x + ball.size < paddle.x + paddle.w &&
-    ball.y + ball.size > paddle.y
+      ball.x - ball.size > paddle.x &&
+      ball.x + ball.size < paddle.x + paddle.w &&
+      ball.y + ball.size > paddle.y
   ) {
-    ball.dy = -ball.speed;
+      ball.dy = -ball.speed;
   }
 
   bricks.forEach((column) => {
-    column.forEach((brick) => {
-      if (brick.visible) {
-        if (
-          ball.x - ball.size > brick.x &&
-          ball.x + ball.size < brick.x + brick.w &&
-          ball.y + ball.size > brick.y &&
-          ball.y - ball.size < brick.y + brick.h
-        ) {
-          ball.dy *= -1;
-          brick.visible = false;
+      column.forEach((brick) => {
+          if (brick.visible) {
+              if (
+                  ball.x - ball.size > brick.x &&
+                  ball.x + ball.size < brick.x + brick.w &&
+                  ball.y + ball.size > brick.y &&
+                  ball.y - ball.size < brick.y + brick.h
+              ) {
+                  ball.dy *= -1;
+                  brick.visible = false;
 
-          increaseScore();
-        }
-      }
-    });
+                  increaseScore();
+              }
+          }
+      });
   });
 
   if (ball.y + ball.size > canvas.height) {
-    if (localStorage.getItem("score") < score) {
-      localStorage.setItem("score", score);
-    }
-    finalMessage.innerText = "Game Over";
-    popup.style.display = "flex";
     paused = true;
-    highScore = localStorage.getItem("score");
-    showAllBricks();
-    score = 0;
-    ball.speed = 0;
+      if (localStorage.getItem("score") < score) {
+          localStorage.setItem("score", score);
+      }
+      Swal.fire({
+        icon: "error",
+        title: "Game over...",
+        text: "Try again!",
+        customClass: {
+          confirmButton: "play-button",
+        },
+      }).then(() => {
+          resetGame();
+      });
+    }
   }
-}
 
 function increaseScore() {
   score++;
 
   if (score % (brickRowCount * brickColumnCount) === 0) {
-    finalMessage.innerText = "Congratulations! You Won! 🤩";
-    popup.style.display = "flex";
-    paused = true;
-    showAllBricks();
+      finalMessage.innerText = "Congratulations! You Won! 🤩";
+      popup.style.display = "flex";
+      paused = true;
+      showAllBricks();
   }
 }
 
 function showAllBricks() {
   bricks.forEach((column) => {
-    column.forEach((brick) => (brick.visible = true));
+      column.forEach((brick) => (brick.visible = true));
   });
 }
 
 function update() {
-  movePaddle();
-  moveBall();
-
-  draw();
-
   if (paused === false) {
-    requestAnimationFrame(update);
+      movePaddle();
+      moveBall();
+      draw();
+      requestAnimationFrame(update);
   }
 }
 
-draw();
 function playGame() {
   paused = false;
   update();
@@ -214,22 +232,23 @@ function playGame() {
 }
 
 function keyDown(e) {
-  console.log(e.key);
-  if (e.key === "Right" || e.key === "ArrowRight") {
+  if (e.key === "Right" || e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
     paddle.dx = paddle.speed;
-  } else if (e.key === "Left" || e.key === "ArrowLeft") {
+  } else if (e.key === "Left" || e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
     paddle.dx = -paddle.speed;
   }
 }
 
 function keyUp(e) {
   if (
-    e.key === "Right" ||
-    e.key === "ArrowRight" ||
-    e.key === "Left" ||
-    e.key === "ArrowLeft"
+      e.key === "Right" ||
+      e.key === "ArrowRight" ||
+      e.key === "Left" ||
+      e.key === "ArrowLeft" ||
+      e.key === "a" || e.key === "A" ||
+      e.key === "d" || e.key === "D"
   ) {
-    paddle.dx = 0;
+      paddle.dx = 0;
   }
 }
 
@@ -240,5 +259,5 @@ document.addEventListener("keyup", keyUp);
 
 playAgainBtn.addEventListener("click", (e) => {
   popup.style.display = "none";
-  window.location.reload();
+  resetGame();
 });
