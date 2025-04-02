@@ -1,6 +1,7 @@
 window.onload = function () {
   paused = true;
   playBtn.disabled = false;
+  draw();
 };
 
 const rulesBtn = document.getElementById("rules-btn");
