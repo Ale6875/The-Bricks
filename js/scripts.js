@@ -85,12 +85,12 @@ function drawPaddle() {
 }
 
 function drawScore() {
-  ctx.font = "20px Arial";
+  ctx.font = "17px SuperMario";
   ctx.fillText(`Score: ${score}`, canvas.width - 100, 30);
 }
 
 function drawHighScore() {
-  ctx.font = "20px Arial";
+  ctx.font = "17px SuperMario";
   ctx.fillText(
       `High Score: ${localStorage.getItem("score")}`,
       canvas.width - 260,
@@ -203,10 +203,17 @@ function increaseScore() {
   score++;
 
   if (score % (brickRowCount * brickColumnCount) === 0) {
-      finalMessage.innerText = "Congratulations! You Won! 🤩";
-      popup.style.display = "flex";
-      paused = true;
-      showAllBricks();
+    paused = true;
+    Swal.fire({
+      icon: "success",
+      title: "Congratulations!",
+      text: "You won!",
+      customClass: {
+        confirmButton: "play-button",
+      },
+    }).then(() => {
+        resetGame();
+    });
   }
 }
 
