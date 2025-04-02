@@ -27,45 +27,6 @@ canvas {
   right: 30px;
 }
 
-.popup-container {
-  background-color: rgba(0, 0, 0, 0.3);
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  display: none;
-  align-items: center;
-  justify-content: center;
-}
-
-.popup {
-  background: #ffdd3c;
-  border-radius: 5px;
-  box-shadow: 0 15px 10px 3px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  text-align: center;
-}
-
-.popup button {
-  cursor: pointer;
-  background: #fff;
-  color: #2980b9;
-  border: 0;
-  font-weight: bold;
-  margin-top: 20px;
-  padding: 12px 20px;
-  font-size: 16px;
-}
-
-.popup button:active {
-  transform: scale(0.95);
-}
-
-.popup button:focus {
-  outline: 0;
-}
-
 #final-message {
   color: #fff;
 }
