@@ -205,6 +205,7 @@ function increaseScore() {
 
   if (score % (brickRowCount * brickColumnCount) === 0) {
     paused = true;
+    localStorage.setItem("score", score);
     Swal.fire({
       icon: "success",
       title: "Congratulations!",
