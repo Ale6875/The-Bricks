@@ -139,6 +139,7 @@ function movePaddle() {
 
 function resetGame() {
   score = 0;
+  lives = 3;
   ball.x = canvas.width / 2;
   ball.y = canvas.height / 2;
   ball.speed = 4;
@@ -149,7 +150,6 @@ function resetGame() {
   draw();
   paused = true;
   playBtn.disabled = false;
-  lives = 3;
 }
 
 function moveBall() {
