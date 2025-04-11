@@ -17,6 +17,7 @@ const ctx = canvas.getContext("2d");
 let score = 0;
 let highScore = localStorage.getItem("score");
 let paused = true;
+let lives = 3;
 
 const brickRowCount = 5;
 const brickColumnCount = 9;
@@ -60,12 +61,12 @@ const bricks = [];
 
 function initializeBricks() {
   for (let i = 0; i < brickColumnCount; i++) {
-      bricks[i] = [];
-      for (let j = 0; j < brickRowCount; j++) {
-          const x = i * (brickInfo.w + brickInfo.padding) + brickInfo.offsetX;
-          const y = j * (brickInfo.h + brickInfo.padding) + brickInfo.offsetY;
-          bricks[i][j] = { x, y, ...brickInfo };
-      }
+    bricks[i] = [];
+    for (let j = 0; j < brickRowCount; j++) {
+      const x = i * (brickInfo.w + brickInfo.padding) + brickInfo.offsetX;
+      const y = j * (brickInfo.h + brickInfo.padding) + brickInfo.offsetY;
+      bricks[i][j] = { x, y, ...brickInfo };
+    }
   }
 }
 
@@ -93,19 +94,24 @@ function drawScore() {
 function drawHighScore() {
   ctx.font = "15px SuperMario";
   ctx.fillText(
-      `High Score: ${localStorage.getItem("score")}`,
-      canvas.width - 260,
-      30
+    `High Score: ${localStorage.getItem("score")}`,
+    canvas.width - 260,
+    30
   );
+}
+
+function drawLives() {
+  ctx.font = "15px SuperMario";
+  ctx.fillText(`Lives: ${lives}`, 30, 30);
 }
 
 function drawBricks() {
   bricks.forEach((column) => {
-      column.forEach((brick) => {
-          if (brick.visible) {
-              ctx.drawImage(brick.image, brick.x, brick.y, brick.w, brick.h);
-          }
-      });
+    column.forEach((brick) => {
+      if (brick.visible) {
+        ctx.drawImage(brick.image, brick.x, brick.y, brick.w, brick.h);
+      }
+    });
   });
 }
 
@@ -115,6 +121,7 @@ function draw() {
   drawPaddle();
   drawScore();
   drawHighScore();
+  drawLives();
   drawBricks();
 }
 
@@ -122,11 +129,11 @@ function movePaddle() {
   paddle.x += paddle.dx;
 
   if (paddle.x + paddle.w > canvas.width) {
-      paddle.x = canvas.width - paddle.w;
+    paddle.x = canvas.width - paddle.w;
   }
 
   if (paddle.x < 0) {
-      paddle.x = 0;
+    paddle.x = 0;
   }
 }
 
@@ -142,6 +149,7 @@ function resetGame() {
   draw();
   paused = true;
   playBtn.disabled = false;
+  lives = 3;
 }
 
 function moveBall() {
@@ -149,43 +157,45 @@ function moveBall() {
   ball.y += ball.dy;
 
   if (ball.x + ball.size > canvas.width || ball.x - ball.size < 0) {
-      ball.dx *= -1;
+    ball.dx *= -1;
   }
 
   if (ball.y + ball.size > canvas.height || ball.y - ball.size < 0) {
-      ball.dy *= -1;
+    ball.dy *= -1;
   }
 
   if (
-      ball.x - ball.size > paddle.x &&
-      ball.x + ball.size < paddle.x + paddle.w &&
-      ball.y + ball.size > paddle.y
+    ball.x - ball.size > paddle.x &&
+    ball.x + ball.size < paddle.x + paddle.w &&
+    ball.y + ball.size > paddle.y
   ) {
-      ball.dy = -ball.speed;
+    ball.dy = -ball.speed;
   }
 
   bricks.forEach((column) => {
-      column.forEach((brick) => {
-          if (brick.visible) {
-              if (
-                  ball.x - ball.size > brick.x &&
-                  ball.x + ball.size < brick.x + brick.w &&
-                  ball.y + ball.size > brick.y &&
-                  ball.y - ball.size < brick.y + brick.h
-              ) {
-                  ball.dy *= -1;
-                  brick.visible = false;
+    column.forEach((brick) => {
+      if (brick.visible) {
+        if (
+          ball.x - ball.size > brick.x &&
+          ball.x + ball.size < brick.x + brick.w &&
+          ball.y + ball.size > brick.y &&
+          ball.y - ball.size < brick.y + brick.h
+        ) {
+          ball.dy *= -1;
+          brick.visible = false;
 
-                  increaseScore();
-              }
-          }
-      });
+          increaseScore();
+        }
+      }
+    });
   });
 
   if (ball.y + ball.size > canvas.height) {
-    paused = true;
+    lives--;
+    if (lives === 0) {
+      paused = true;
       if (localStorage.getItem("score") < score) {
-          localStorage.setItem("score", score);
+        localStorage.setItem("score", score);
       }
       Swal.fire({
         icon: "error",
@@ -195,10 +205,28 @@ function moveBall() {
           confirmButton: "play-button",
         },
       }).then(() => {
-          resetGame();
+        resetGame();
+      });
+    } else {
+      ball.x = canvas.width / 2;
+      ball.y = canvas.height / 2;
+      ball.speed = 4;
+      ball.dx = 4;
+      ball.dy = -4;
+      paddle.x = canvas.width / 2 - 40;
+      paused = true;
+      playBtn.disabled = false;
+      Swal.fire({
+        icon: "warning",
+        title: "Life Lost!",
+        text: "You have " + lives + " lives left. Press Play to continue",
+        customClass: {
+          confirmButton: "play-button",
+        },
       });
     }
   }
+}
 
 function increaseScore() {
   score++;
@@ -214,23 +242,23 @@ function increaseScore() {
         confirmButton: "play-button",
       },
     }).then(() => {
-        resetGame();
+      resetGame();
     });
   }
 }
 
 function showAllBricks() {
   bricks.forEach((column) => {
-      column.forEach((brick) => (brick.visible = true));
+    column.forEach((brick) => (brick.visible = true));
   });
 }
 
 function update() {
   if (paused === false) {
-      movePaddle();
-      moveBall();
-      draw();
-      requestAnimationFrame(update);
+    movePaddle();
+    moveBall();
+    draw();
+    requestAnimationFrame(update);
   }
 }
 
@@ -250,14 +278,14 @@ function keyDown(e) {
 
 function keyUp(e) {
   if (
-      e.key === "Right" ||
-      e.key === "ArrowRight" ||
-      e.key === "Left" ||
-      e.key === "ArrowLeft" ||
-      e.key === "a" || e.key === "A" ||
-      e.key === "d" || e.key === "D"
+    e.key === "Right" ||
+    e.key === "ArrowRight" ||
+    e.key === "Left" ||
+    e.key === "ArrowLeft" ||
+    e.key === "a" || e.key === "A" ||
+    e.key === "d" || e.key === "D"
   ) {
-      paddle.dx = 0;
+    paddle.dx = 0;
   }
 }
 
