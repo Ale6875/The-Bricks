@@ -21,6 +21,11 @@ canvas {
   border-radius: 5px;
 }
 
+#game-title{
+  color: white;
+  font-family: SuperMario;
+}
+
 .play-btn {
   position: absolute;
   top: 80px;
