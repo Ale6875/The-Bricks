@@ -1,4 +1,4 @@
-# Super Mario Brick Game (HTML & CSS)
+# The Bricks: Super Mario Theme (HTML, CSS & JS)
 
 This is a simple brick breaker game inspired by the classic Super Mario Bros. aesthetic, built using only HTML and CSS.
 
