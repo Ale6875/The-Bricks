@@ -112,12 +112,24 @@ function drawScore() {
 }
 
 function drawHighScore() {
-  ctx.font = "15px SuperMario";
-  ctx.fillText(
-      `High Score: ${localStorage.getItem("score")}`,
-      canvas.width - 260,
-      30
-  );
+  if(highScore==null){
+    ctx.font = "15px SuperMario";
+    ctx.fillText(
+        `High Score: `,
+        canvas.width - 260,
+        30
+    );
+  }
+
+  else{
+    ctx.font = "15px SuperMario";
+    ctx.fillText(
+        `High Score: ${localStorage.getItem("score")}`,
+        canvas.width - 260,
+        30
+    );
+  }
+  
 }
 
 function drawLives() {
