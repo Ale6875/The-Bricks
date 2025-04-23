@@ -5,11 +5,11 @@ This is a simple brick breaker game inspired by the classic Super Mario Bros. ae
 ## How to Play
 
 1.  Open the `index.html` file in your web browser.
-2.  The game will start automatically.
+2.  Click the "start game" button.
 
 ## What you'll see
 
-* A game screen layout of a brick breaking game.
+* A game screen layout of the brick breaking game.
 * Bricks arranged in a pattern
 * A designated area for a paddle
 * A visual representation of a ball
