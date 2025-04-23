@@ -22,63 +22,22 @@ canvas {
 }
 
 #game-title{
-  color: white;
   font-family: SuperMario;
   display: inline-block;
   font-size: 54px;
 }
 
 #game-title span {
-  color: black;
+  color: #efefef;
   text-shadow:
-    -1px -5px 0 black, -2px -5px 0 black, -3px -5px 0 black, -4px -5px 0 black, -5px -5px 0 black,
-    1px -5px 0 black, 2px -5px 0 black, 3px -5px 0 black, 4px -5px 0 black, 5px -5px 0 black,
-    -5px -1px 0 black, -5px -2px 0 black, -5px -3px 0 black, -5px -4px 0 black, -5px 1px 0 black,
-    -5px 2px 0 black, -5px 3px 0 black, -5px 4px 0 black,
-    5px -1px 0 black, 5px -2px 0 black, 5px -3px 0 black, 5px -4px 0 black, 5px 1px 0 black,
-    5px 2px 0 black, 5px 3px 0 black, 5px 4px 0 black,
-    -1px 5px 0 black, -2px 5px 0 black, -3px 5px 0 black, -4px 5px 0 black, -5px 5px 0 black,
-    1px 5px 0 black, 2px 5px 0 black, 3px 5px 0 black, 4px 5px 0 black, 5px 5px 0 black
-}
-
-#game-title span:nth-child(1) {
-  color: #009CDA;
-}
-
-#game-title span:nth-child(2) {
-  color: #FCD000;
-}
-
-#game-title span:nth-child(3) {
-  color: #E71E07;
-}
-
-#game-title span:nth-child(4) {
-  color: #42B132;
-}
-
-#game-title span:nth-child(5) {
-  color: #FCD000;
-}
-
-#game-title span:nth-child(6) {
-  color: #E71E07;
-}
-
-#game-title span:nth-child(7) {
-  color: #42B132;
-}
-
-#game-title span:nth-child(8) {
-  color: #FCD000;
-}
-
-#game-title span:nth-child(9) {
-  color: #009CDA;
-}
-
-#game-title span:nth-child(10) {
-  color: #42B132;
+    -2px -2px 0 black, -2px -2px 0 black, -2px -2px 0 black, -2px -2px 0 black, -2px -2px 0 black,
+    2px -2px 0 black, 2px -2px 0 black, 2px -2px 0 black, 2px -2px 0 black, 2px -2px 0 black,
+    -2px -2px 0 black, -2px -2px 0 black, -2px -2px 0 black, -2px -2px 0 black, -2px 2px 0 black,
+    -2px 2px 0 black, -2px 2px 0 black, -2px 2px 0 black,
+    2px -2px 0 black, 2px -2px 0 black, 2px -2px 0 black, 2px -2px 0 black, 2px 2px 0 black,
+    2px 2px 0 black, 2px 2px 0 black, 2px 2px 0 black,
+    -2px 2px 0 black, -2px 2px 0 black, -2px 2px 0 black, -2px 2px 0 black, -2px 2px 0 black,
+    2px 2px 0 black, 2px 2px 0 black, 2px 2px 0 black, 2px 2px 0 black, 2px 2px 0 black;
 }
 
 .play-btn {
