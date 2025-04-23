@@ -35,6 +35,9 @@ gameTitle.addEventListener('click', () => {
 
 let score = 0;
 let highScore = localStorage.getItem("score");
+if (highScore === null) {
+  highScore = 0;
+}
 let paused = true;
 let lives = 3;
 const lifeImages = [];
@@ -114,9 +117,9 @@ function drawScore() {
 function drawHighScore() {
   ctx.font = "15px SuperMario";
   ctx.fillText(
-      `High Score: ${localStorage.getItem("score")}`,
-      canvas.width - 260,
-      30
+    `High Score: ${highScore}`,
+    canvas.width - 260,
+    30
   );
 }
 
@@ -163,13 +166,14 @@ function movePaddle() {
   }
 }
 
+
 function resetGame() {
   score = 0;
   lives = 3;
   lifeImages.length = 0;
   for (let i = 0; i < lives; i++) {
-      lifeImages[i] = new Image();
-      lifeImages[i].src = "assets/coin.png";
+    lifeImages[i] = new Image();
+    lifeImages[i].src = "assets/coin.png";
   }
   ball.x = canvas.width / 2;
   ball.y = canvas.height / 2;
@@ -214,7 +218,6 @@ function moveBall() {
               ) {
                   ball.dy *= -1;
                   brick.visible = false;
-
                   increaseScore();
               }
           }
@@ -222,24 +225,25 @@ function moveBall() {
   });
 
   if (ball.y + ball.size > canvas.height) {
-      lives--;
-      lifeImages.pop();
-      if (lives === 0) {
-          paused = true;
-          if (localStorage.getItem("score") < score) {
-              localStorage.setItem("score", score);
-          }
-          Swal.fire({
-              icon: "error",
-              title: "Game over...",
-              text: "Try again!",
-              customClass: {
-                  confirmButton: "play-button",
-              },
-          }).then(() => {
-              resetGame();
-          });
-      } else {
+    lives--;
+    lifeImages.pop();
+    if (lives === 0) {
+      paused = true;
+      if (localStorage.getItem("score") === null || parseInt(localStorage.getItem("score")) < score) {
+        localStorage.setItem("score", score);
+        highScore = score;
+      }
+      Swal.fire({
+        icon: "error",
+        title: "Game over...",
+        text: "Try again!",
+        customClass: {
+          confirmButton: "play-button",
+        },
+      }).then(() => {
+        resetGame();
+      });
+    } else {
           ball.x = canvas.width / 2;
           ball.y = canvas.height / 2;
           ball.speed = 4;
@@ -264,18 +268,19 @@ function increaseScore() {
   score++;
 
   if (score % (brickRowCount * brickColumnCount) === 0) {
-      paused = true;
-      localStorage.setItem("score", score);
-      Swal.fire({
-          icon: "success",
-          title: "Congratulations!",
-          text: "You won!",
-          customClass: {
-              confirmButton: "play-button",
-          },
-      }).then(() => {
-          resetGame();
-      });
+    paused = true;
+    localStorage.setItem("score", score);
+    highScore = score;
+    Swal.fire({
+      icon: "success",
+      title: "Congratulations!",
+      text: "You won!",
+      customClass: {
+        confirmButton: "play-button",
+      },
+    }).then(() => {
+      resetGame();
+    });
   }
 }
 
